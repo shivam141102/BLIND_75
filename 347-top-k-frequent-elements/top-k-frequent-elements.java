@@ -1,46 +1,30 @@
-// class Solution {
-//     public int[] topKFrequent(int[] nums, int k) {
-//         // Create a frequency map
-//         Map<Integer, Integer> frequencyMap = new HashMap<>();
-//         for (int num : nums) {
-//             frequencyMap.put(num, frequencyMap.getOrDefault(num, 0) + 1);
-//         }
-
-//         // Convert the frequency map to a list and sort by frequency in descending order
-//         List<Map.Entry<Integer, Integer>> sortedEntries = new ArrayList<>(frequencyMap.entrySet());
-//         sortedEntries.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
-
-//         // Extract the top K keys into the result array
-//         int[] result = new int[k];
-//         for (int i = 0; i < k; i++) {
-//             result[i] = sortedEntries.get(i).getKey();
-//         }
-
-//         return result;
-//     }
-// }
-
 class Solution {
     public int[] topKFrequent(int[] nums, int k) {
-        // Create a frequency map
-        Map<Integer, Integer> frequencyMap = new HashMap<>();
-        for (int num : nums) {
-            frequencyMap.put(num, frequencyMap.getOrDefault(num, 0) + 1);
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int num : nums){
+            map.put(num, map.getOrDefault(num, 0) + 1);
         }
 
-        PriorityQueue <Map.Entry<Integer, Integer>> minHeap = new PriorityQueue<>(Map.Entry.comparingByValue());
-        
-        for(Map.Entry<Integer, Integer> entry : frequencyMap.entrySet()){
-            minHeap.offer(entry);
-            if(minHeap.size() > k){
-                minHeap.poll();
+        List<Integer>[] bucket = new ArrayList[nums.length + 1];
+        for(Map.Entry<Integer, Integer> mp : map.entrySet()){
+            int key = mp.getValue();
+            int value = mp.getKey();
+            if(bucket[key] == null){
+                bucket[key] = new ArrayList<>();
+            }
+            bucket[key].add(value);
+        }
+        int[] ans = new int[k];
+        int index = 0;
+
+        for(int i = bucket.length - 1; i >= 0 ; i--){
+            if (bucket[i] != null) {
+                for(int j = 0; j < bucket[i].size() && index < k; j++){
+                    ans[index++] = bucket[i].get(j);
+                    if(index == k) break;
+                }
             }
         }
-        int[] result = new int [k];
-        int index = 0;
-        while(!minHeap.isEmpty()){
-            result[index++] = minHeap.poll().getKey();
-        }
-        return result;
+        return ans;
     }
 }
