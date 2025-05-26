@@ -27,24 +27,50 @@
 //     }
 // }
 
+// Using 2 Stacks
+// class Solution {
+//     public List<Integer> postorderTraversal(TreeNode root){
+//         Stack<TreeNode> stack1 = new Stack<TreeNode>();
+//         Stack<Integer> stack2 = new Stack<Integer>();
+//         List<Integer> ans = new ArrayList<Integer>();
+//         if(root == null) return ans;
+//         stack1.push(root);
 
+//         while(!stack1.isEmpty()){
+//             TreeNode node = stack1.pop();
+//             stack2.push(node.val);
+//             if(node.left != null) stack1.push(node.left);
+//             if(node.right != null) stack1.push(node.right);
+//         }
+//         while(!stack2.isEmpty()){
+//             ans.add(stack2.pop());
+//         }
+//         return ans;
+//     }
+// }
+
+// Using 1 stack
 class Solution {
-    public List<Integer> postorderTraversal(TreeNode root){
-        Stack<TreeNode> stack1 = new Stack<TreeNode>();
-        Stack<Integer> stack2 = new Stack<Integer>();
-        List<Integer> ans = new ArrayList<Integer>();
-        if(root == null) return ans;
-        stack1.push(root);
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        if (root == null) return result;
 
-        while(!stack1.isEmpty()){
-            TreeNode node = stack1.pop();
-            stack2.push(node.val);
-            if(node.left != null) stack1.push(node.left);
-            if(node.right != null) stack1.push(node.right);
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+
+        while (!stack.isEmpty()) {
+            TreeNode current = stack.pop();
+            result.add(current.val);
+
+            if (current.left != null) {
+                stack.push(current.left);
+            }
+            if (current.right != null) {
+                stack.push(current.right);
+            }
         }
-        while(!stack2.isEmpty()){
-            ans.add(stack2.pop());
-        }
-        return ans;
+
+        Collections.reverse(result);
+        return result;
     }
 }
