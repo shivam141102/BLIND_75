@@ -18,8 +18,7 @@ class Solution {
         return helper(root, Long.MIN_VALUE, Long.MAX_VALUE);
     }
 
-    public boolean helper(TreeNode node, long left, long
-     right){
+    public boolean helper(TreeNode node, long left, long right){
         if(node == null) return true;
         if(!(node.val > left && node.val < right)) return false;
 
