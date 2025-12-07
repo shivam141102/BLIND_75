@@ -1,17 +1,4 @@
 class Solution {
-    public int findCircleNum(int[][] isConnected) {
-        List<List<Integer>> adj = getAdjacencyList(isConnected);
-        int province = 0;
-        boolean[] vis = new boolean[isConnected.length + 1];
-        for(int i = 0; i < isConnected.length; i++){
-            if(vis[i] == false){
-                bfs(i, adj, vis);
-                province++;
-            }
-        }
-        return province;
-    }
-
     public List<List<Integer>> getAdjacencyList(int[][] isConnected){
         List<List<Integer>> adj = new ArrayList<>();
         for(int[] edge : isConnected){
@@ -32,17 +19,31 @@ class Solution {
 
     public void bfs(int start, List<List<Integer>> adj, boolean[] vis){
         Queue<Integer> q = new LinkedList<>();
-        q.offer(start);
+        q.add(start);
         vis[start] = true;
 
         while(!q.isEmpty()){
-            int node = q.poll();
+            int node = q.remove();
             for(int neighbour: adj.get(node)){
                 if(vis[neighbour] == false){
                     vis[neighbour] = true;
-                    q.offer(neighbour);
+                    q.add(neighbour);
                 }
             }
         }
+    }
+
+    public int findCircleNum(int[][] isConnected) {
+        List<List<Integer>> adj = getAdjacencyList(isConnected);
+        int province = 0;
+        boolean[] vis = new boolean[isConnected.length + 1];
+
+        for(int i = 0; i < isConnected.length; i++){
+            if(vis[i] == false){
+                bfs(i, adj, vis);
+                province++;
+            }
+        }
+        return province;
     }
 }
