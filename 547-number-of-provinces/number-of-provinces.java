@@ -17,18 +17,11 @@ class Solution {
         return adj;
     }
 
-    public void bfs(int start, List<List<Integer>> adj, boolean[] vis){
-        Queue<Integer> q = new LinkedList<>();
-        q.add(start);
+    public void dfs(int start, List<List<Integer>> adj, boolean[] vis){
         vis[start] = true;
-
-        while(!q.isEmpty()){
-            int node = q.remove();
-            for(int neighbour: adj.get(node)){
-                if(vis[neighbour] == false){
-                    vis[neighbour] = true;
-                    q.add(neighbour);
-                }
+        for(int neighbour: adj.get(start)){
+            if(vis[neighbour] == false){
+                dfs(neighbour, adj, vis);
             }
         }
     }
@@ -40,7 +33,7 @@ class Solution {
 
         for(int i = 0; i < isConnected.length; i++){
             if(vis[i] == false){
-                bfs(i, adj, vis);
+                dfs(i, adj, vis);
                 province++;
             }
         }
