@@ -1,30 +1,26 @@
-from collections import deque, defaultdict # Import deque for BFS and defaultdict for pattern mapping
+from collections import deque # Import deque for BFS queue
 
 class Solution:
-    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
-        if endWord not in wordList: # If endWord is not in wordList, no solution
-            return 0 # Return 0 as per problem statement
+    def ladderLength(self, beginWord: str, endWord: str, wordList: list) -> int:
+        wordSet = set(wordList) # Convert wordList to set for O(1) lookup
+        if endWord not in wordSet:
+            return 0 # If endWord not in wordList, no transformation possible
 
-        L = len(beginWord) # All words are of same length
-        all_combo_dict = defaultdict(list) # Dictionary to hold all combinations
+        queue = deque() # Initialize BFS queue
+        queue.append((beginWord, 1)) # Start with beginWord and step count 1
+        visited = set() # Set to track visited words
+        visited.add(beginWord) # Mark beginWord as visited
 
-        for word in wordList: # Preprocess word list
-            for i in range(L): # For each position in the word
-                pattern = word[:i] + '*' + word[i+1:] # Create pattern with wildcard
-                all_combo_dict[pattern].append(word) # Map pattern to word
+        while queue:
+            word, steps = queue.popleft() # Pop word and current step count
+            if word == endWord:
+                return steps # Found endWord, return steps
 
-        queue = deque([(beginWord, 1)]) # Initialize BFS queue with beginWord and level 1
-        visited = set([beginWord]) # Set to keep track of visited words
+            for i in range(len(word)): # For each character position
+                for c in 'abcdefghijklmnopqrstuvwxyz': # Try all possible letters
+                    nextWord = word[:i] + c + word[i+1:] # Change one letter
+                    if nextWord in wordSet and nextWord not in visited:
+                        queue.append((nextWord, steps + 1)) # Enqueue new word with incremented steps
+                        visited.add(nextWord) # Mark as visited
 
-        while queue: # While there are nodes to process
-            current_word, level = queue.popleft() # Get current word and level
-            for i in range(L): # For each position in the word
-                pattern = current_word[:i] + '*' + current_word[i+1:] # Create pattern
-                for word in all_combo_dict[pattern]: # For all words matching this pattern
-                    if word == endWord: # If we found the endWord
-                        return level + 1 # Return the number of steps
-                    if word not in visited: # If word has not been visited
-                        visited.add(word) # Mark as visited
-                        queue.append((word, level + 1)) # Add to queue with incremented level
-                all_combo_dict[pattern] = [] # Clear the list to prevent re-processing
-        return 0 # If endWord is not found, return 0
+        return 0 # If endWord not found, return 0
